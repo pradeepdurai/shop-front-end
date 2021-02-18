@@ -1,6 +1,7 @@
 import { API } from '../../backend';
 
 export const signup = user => {
+    console.log(user);
     return fetch(`${API}/signup`, {
         method: "POST",
         headers: {
@@ -51,7 +52,7 @@ export const authenticate = (data, next) => {
 
 }
 
-export const authentication = (data, next) => {
+export const authenticated = (data, next) => {
 
     if (typeof window !== "undefiend") {
         return false;
