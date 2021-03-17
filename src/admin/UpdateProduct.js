@@ -41,6 +41,7 @@ const UpdateProduct = ({match}) => {
                 setValues({...values, error : data.error})
             }
             else {
+              preloadCategories();
                 setValues({...values,
                     productName : data.productName,
                     description : data.description,
@@ -53,14 +54,27 @@ const UpdateProduct = ({match}) => {
             }
         })
     };
+
+    const preloadCategories = () => {
+      getCategories().then(data =>{
+        if(data.error){
+          setValues({...values, error : data.error})
+        } else {
+          setValues({
+            categories : data, formData : new FormData()
+          })
+        }
+      })
+    }
   
     useEffect(()=>{
        preload(match.params.productId) 
     }, [])
+
     const onSubmit = (event) => {
       event.preventDefault();
       setValues({...values, error : false,loading : true})
-      updateProduct(user._id, token, formData).then(data =>{
+      updateProduct(match.params.productId, user._id, token, formData).then(data =>{
         if(data.error){
           setValues({...values, error: data.error})
         }
@@ -83,7 +97,7 @@ const UpdateProduct = ({match}) => {
     const successMesage = () =>{
       return(
       <div className="alert alert-success mt-3" style={{display : createdProduct ? "block" : "none"}}>
-        <h4>{createdProduct} Crearted Product</h4>
+        <h4>{createdProduct} Updated Successfully</h4>
   
       </div>
       );
@@ -177,7 +191,7 @@ const UpdateProduct = ({match}) => {
           onClick={onSubmit}
           className="btn btn-outline-success mb-3"
         >
-          Create Product
+          Update Product
         </button>
       </form>
     );
